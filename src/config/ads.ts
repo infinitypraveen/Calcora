@@ -44,7 +44,7 @@ export const adsConfig = {
    */
   previewPlaceholders: true,
   /** Publisher ID, format ca-pub-xxxxxxxxxxxxxxxx. Leave empty. Do not invent one. */
-  publisherId: "",
+  publisherId: "ca-pub-9505925327648300",
   /** Wait for advertising consent before injecting the AdSense script or units. */
   requireConsent: true,
   /** How many in-content slots may render on a single page. */

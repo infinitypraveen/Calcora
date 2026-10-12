@@ -56,8 +56,10 @@ Edit `src/config/support.ts`. Set `url` to your own Buy Me a Coffee, Ko-fi, GitH
 
 Ads are off until you edit `src/config/ads.ts`.
 
-1. After approval, set `enabled: true`.
-2. Set `publisherId` to the `ca-pub-` ID Google gives you. Do not invent one.
+1. The AdSense loader script is in the `<head>` of `index.html` (publisher `ca-pub-9505925327648300`). It loads once for every route, because the app is a single page. Do not add a second copy.
+2. `public/ads.txt` authorises that publisher. Keep it at the site root after you change domains.
+3. The CSP in `public/_headers`, `netlify.toml`, and `vercel.json` already allows Google's ad domains. If you change the CSP, keep those domains.
+4. After approval, set `enabled: true` in `src/config/ads.ts`. The `publisherId` is already set to the ID above.
 3. Create ad units and paste each unit’s numeric slot ID into the matching placement’s `slotId`.
 4. Leave a placement `active: false` to hide it. Sidebar placements are desktop-only.
 5. `previewPlaceholders` shows labelled boxes when a live unit cannot render. Turn it off in production if you do not want empty boxes.
