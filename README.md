@@ -4,7 +4,7 @@ Free, browser-based calculators with the formula, assumptions, and a worked exam
 
 This repository is a Vite + React + TypeScript app styled with Tailwind CSS. The production build used by this project inlines assets into `dist/index.html` because `vite-plugin-singlefile` is already configured. Host the `dist` folder and rewrite unknown paths to `index.html` (see Netlify and Vercel files).
 
-Replace `https://example.com` and the owner placeholders in `src/config/site.ts` before launch. Nothing here is a claim of AdSense approval, search ranking, a security certification, or a measured Core Web Vitals score.
+The production domain is `https://calcoraplus.netlify.app` (set in `src/config/site.ts`, `index.html`, `public/robots.txt`, and `public/sitemap.xml`). If you move to a custom domain, update those four places. Replace the owner placeholders in `src/config/site.ts` before launch. Nothing here is a claim of AdSense approval, search ranking, a security certification, or a measured Core Web Vitals score.
 
 ## Local setup
 
@@ -54,17 +54,20 @@ Edit `src/config/support.ts`. Set `url` to your own Buy Me a Coffee, Ko-fi, GitH
 
 ## Configure Google AdSense
 
-Ads are off until you edit `src/config/ads.ts`.
+The official loader is already in `index.html` `<head>` (loaded once for every page):
 
-1. The AdSense loader script is in the `<head>` of `index.html` (publisher `ca-pub-9505925327648300`). It loads once for every route, because the app is a single page. Do not add a second copy.
-2. `public/ads.txt` authorises that publisher. Keep it at the site root after you change domains.
-3. The CSP in `public/_headers`, `netlify.toml`, and `vercel.json` already allows Google's ad domains. If you change the CSP, keep those domains.
-4. After approval, set `enabled: true` in `src/config/ads.ts`. The `publisherId` is already set to the ID above.
-3. Create ad units and paste each unit’s numeric slot ID into the matching placement’s `slotId`.
-4. Leave a placement `active: false` to hide it. Sidebar placements are desktop-only.
-5. `previewPlaceholders` shows labelled boxes when a live unit cannot render. Turn it off in production if you do not want empty boxes.
-6. The consent bar must be accepted before the AdSense script loads, because `requireConsent` is true.
-7. Update the Content-Security-Policy in `public/_headers` so Google’s ad domains are allowed. The default policy is strict enough for the calculator and will block AdSense until you widen it. The official script is loaded once from `AdScript.tsx`.
+```html
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9505925327648300" crossorigin="anonymous"></script>
+```
+
+`src/config/ads.ts` stores the same publisher ID and is the single source of truth for the units. To start serving ads:
+
+1. In the AdSense console, create ad units for the placements you want.
+2. Paste each unit’s numeric slot ID into the matching placement’s `slotId` in `src/config/ads.ts`. Until a slot ID is set, that placement renders a labelled placeholder box.
+3. Set a placement’s `active: false` to hide it. Sidebar placements are desktop-only.
+4. Set `previewPlaceholders: false` to stop rendering the labelled boxes once your units are live.
+5. Ad unit requests still wait for the consent bar to be accepted (`requireConsent`). The head loader itself loads as part of Google’s standard integration.
+6. The Content-Security-Policy in `public/_headers`, `netlify.toml`, and `vercel.json` already allows Google’s adscript, frame, connect, and image domains. If you edit the CSP, keep those domains or ad units will be blocked.
 
 Placements are documented in `src/config/ads.ts`: homepage leaderboard, homepage sidebar, in-content break, guide midpoint, footer banner, calculator top, below results, before FAQs, and calculator sidebar.
 
@@ -96,7 +99,7 @@ Set `enabled` and a real `G-` measurement ID in `src/config/analytics.ts`. Event
 
 ## Unfinished before a public launch
 
-- Replace example.com, owner name, email, and address.
+- Replace the owner name, email, and address in `src/config/site.ts` (the domain is already set).
 - Add real AdSense IDs only after approval, then update CSP.
 - Replace sample affiliate products.
 - Re-check tax and GST notes against current official notifications.

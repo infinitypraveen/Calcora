@@ -8,7 +8,7 @@ export const site = {
   tagline: "Calculators with the working shown.",
   description:
     "Free online calculators for finance, health, maths, home, and everyday decisions. Every tool shows the formula, assumptions, and a worked example. Inputs stay in your browser.",
-  url: "https://example.com",
+  url: "https://calcoraplus.netlify.app",
   locale: "en",
   themeColor: "#102033",
   ownerName: "[Site owner legal name]",

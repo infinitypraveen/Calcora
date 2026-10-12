@@ -34,18 +34,19 @@ export interface AdPlacement {
 
 export const adsConfig = {
   /**
-   * Master switch. Keep false in development and until AdSense is approved
-   * and slot IDs are filled in.
+   * Master switch for ad units. The loader script itself lives in index.html
+   * (standard Google integration, loaded once). Set slot IDs in adPlacements
+   * below to start showing units; placeholders show until then.
    */
-  enabled: false,
+  enabled: true,
   /**
    * Draw labelled reserved boxes when a slot has no slot ID, so layout can be reviewed.
-   * These boxes are not ads and do not load third-party scripts.
+   * These boxes are not ads and do not request creative.
    */
   previewPlaceholders: true,
-  /** Publisher ID, format ca-pub-xxxxxxxxxxxxxxxx. Leave empty. Do not invent one. */
+  /** Publisher ID, format ca-pub-xxxxxxxxxxxxxxxx. Must match the client in index.html. */
   publisherId: "ca-pub-9505925327648300",
-  /** Wait for advertising consent before injecting the AdSense script or units. */
+  /** Wait for advertising consent before pushing ad units. The head loader still loads per Google's standard snippet. */
   requireConsent: true,
   /** How many in-content slots may render on a single page. */
   maxInContentPerPage: 2,
