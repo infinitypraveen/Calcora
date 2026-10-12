@@ -27,6 +27,18 @@ export function AdSlot({ placement, page }: { placement: AdPlacementKey; page: A
   if (!allowed || (!live && !placeholder)) return null;
 
   const desktop = config.desktopOnly ? "hidden lg:flex" : "flex";
+  const isInArticle = config.format === "in-article";
+  // Shape hint sent to AdSense. In-article units require fluid + in-article layout.
+  const formatAttr =
+    isInArticle || config.format === "fluid"
+      ? "fluid"
+      : config.format === "rectangle"
+        ? "rectangle"
+        : config.format === "vertical"
+          ? "vertical"
+          : config.format === "horizontal"
+            ? "horizontal"
+            : "auto";
 
   return (
     <aside className={`no-print ${desktop} my-4`} aria-label="Advertisement">
@@ -34,11 +46,12 @@ export function AdSlot({ placement, page }: { placement: AdPlacementKey; page: A
         <ins
           ref={ref}
           className="adsbygoogle block w-full"
-          style={{ display: "block", minHeight: config.minHeight }}
+          style={{ display: "block", minHeight: config.minHeight, textAlign: isInArticle ? "center" : undefined }}
           data-ad-client={adsConfig.publisherId}
           data-ad-slot={config.slotId}
-          data-ad-format={config.format === "horizontal" ? "horizontal" : "auto"}
-          data-full-width-responsive="true"
+          data-ad-format={formatAttr}
+          data-ad-layout={isInArticle ? "in-article" : undefined}
+          data-full-width-responsive={config.format === "horizontal" ? "true" : undefined}
         />
       ) : (
         <div className="ad-slot w-full px-3 py-2" style={{ minHeight: config.minHeight }}>

@@ -60,7 +60,7 @@ export function CalculatorPage() {
           {saved ? "Saved" : "Save"}
         </button>
       </div>
-      <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
+      <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
         <article>
           <AdSlot placement="calcTop" page="calculator" />
           {calc.disclaimer ? <p className="mb-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-100">{calc.disclaimer}</p> : null}

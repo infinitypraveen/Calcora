@@ -69,7 +69,21 @@ The official loader is already in `index.html` `<head>` (loaded once for every p
 5. Ad unit requests still wait for the consent bar to be accepted (`requireConsent`). The head loader itself loads as part of Google’s standard integration.
 6. The Content-Security-Policy in `public/_headers`, `netlify.toml`, and `vercel.json` already allows Google’s adscript, frame, connect, and image domains. If you edit the CSP, keep those domains or ad units will be blocked.
 
-Placements are documented in `src/config/ads.ts`: homepage leaderboard, homepage sidebar, in-content break, guide midpoint, footer banner, calculator top, below results, before FAQs, and calculator sidebar.
+Placements are documented in `src/config/ads.ts` (each has a `createAs` field). Create them in AdSense as follows — 7× Display ads (Responsive) plus 1× In-article ad:
+
+| Placement | Click in AdSense | Shape | Serves |
+|---|---|---|---|
+| `homeTop` | Display ads → Responsive | Horizontal | 728×90 leaderboard desktop / 320×100 mobile |
+| `homeSidebar` | Display ads → Responsive | Square | 300×250 medium rectangle in the 300px sidebar |
+| `homeMid` | Display ads → Responsive | Horizontal | In-content banner |
+| `articleMid` | **In-article ads** → Fluid | Automatic | Native unit inside guides (style it to match body text) |
+| `calcTop` | Display ads → Responsive | Horizontal | Above the calculator |
+| `calcBelowResults` | Display ads → Responsive | Horizontal | Below the results panel |
+| `calcBeforeFaq` | Display ads → Responsive | Horizontal | Mid-content banner |
+| `calcSidebar` | Display ads → Responsive | Square | 300×250 medium rectangle in the 300px sidebar |
+| `footerBanner` | Display ads → Responsive | Horizontal | Full-width banner (already live: `8464147019`) |
+
+Do not use In-feed ads (our pages have no post/feed lists) or Multiplex ads (no recommendation grid). For Display units, leave size on Responsive — the site constrains the shape via `data-ad-format`, and sidebars are desktop-only so they never squeeze on mobile.
 
 ## Analytics
 

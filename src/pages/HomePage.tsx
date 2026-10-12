@@ -67,7 +67,7 @@ export function HomePage() {
           ))}
         </div>
       </section>
-      <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_280px]">
+      <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_300px]">
         <div>
           <h2 className="text-3xl">Browse by category</h2>
           <div className="mt-4 space-y-8">
