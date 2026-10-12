@@ -8,7 +8,14 @@
  *
  * Placements are not all rendered on every page. Each slot lists the page types it belongs to.
  * Sidebar slots are hidden below the `lg` breakpoint in CSS so mobile does not reserve a column.
+ *
+ * Consent: `consentRegionsOnly` asks only visitors in the EEA, UK, and Switzerland,
+ * detected from the browser time zone (no IP, no network call). Everyone else is
+ * served ads without a prompt. Set it false to gate every visitor behind the banner.
  */
+
+import { needsConsentChoice } from "@/lib/geo";
+import { getConsent } from "@/lib/storage";
 
 export type AdPage = "home" | "calculator" | "category" | "article" | "directory" | "legal";
 
@@ -53,8 +60,16 @@ export const adsConfig = {
   previewPlaceholders: false,
   /** Publisher ID, format ca-pub-xxxxxxxxxxxxxxxx. Must match the client in index.html. */
   publisherId: "ca-pub-9505925327648300",
-  /** Wait for advertising consent before pushing ad units. The head loader still loads per Google's standard snippet. */
+  /**
+   * Wait for advertising consent before pushing ad units. When
+   * `consentRegionsOnly` is true this applies only to the EEA/UK/CH.
+   */
   requireConsent: true,
+  /**
+   * Ask only visitors in the EEA, UK, and Switzerland. Everyone else is served
+   * ads immediately, because no consent is required for them.
+   */
+  consentRegionsOnly: true,
   /** How many in-content slots may render on a single page. */
   maxInContentPerPage: 2,
 } as const;
@@ -168,6 +183,18 @@ export type AdPlacementKey = keyof typeof adPlacements;
 
 export function publisherIdConfigured(): boolean {
   return /^ca-pub-\d{10,20}$/.test(adsConfig.publisherId);
+}
+
+/**
+ * Whether an ad unit may be requested. The single gate used by AdSlot and
+ * AdScript. Consent is required only for the EEA/UK/CH when
+ * `consentRegionsOnly` is on; other visitors are never blocked.
+ */
+export function adsAllowed(): boolean {
+  if (!adsConfig.enabled || !publisherIdConfigured()) return false;
+  if (!adsConfig.requireConsent) return true;
+  if (adsConfig.consentRegionsOnly && !needsConsentChoice()) return true;
+  return getConsent() === "granted";
 }
 
 export function slotReady(placement: AdPlacement): boolean {

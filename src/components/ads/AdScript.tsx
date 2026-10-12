@@ -1,24 +1,16 @@
 import { useEffect } from "react";
-import { adsConfig, publisherIdConfigured } from "@/config/ads";
 import { analyticsConfig, analyticsReady } from "@/config/analytics";
 import { getConsent } from "@/lib/storage";
 
-/** Loads third-party ad and analytics scripts once, and only after consent and real IDs. */
+/**
+ * Loads optional analytics once, after a real ID exists and consent is given.
+ *
+ * The AdSense loader is not injected here. It lives in index.html <head> as
+ * Google's standard snippet, which is what AdSense asks for and guarantees the
+ * script loads exactly once on every page. Ad units themselves are gated in
+ * AdSlot via adsAllowed(), so consent still controls what is served.
+ */
 export function AdScript() {
-  useEffect(() => {
-    const consent = getConsent();
-    if (adsConfig.enabled && adsConfig.requireConsent && consent !== "granted") return;
-    if (!adsConfig.enabled || !publisherIdConfigured()) return;
-    // The loader is normally present in index.html <head>. Never inject it twice.
-    if (document.querySelector('script[src*="adsbygoogle.js"]')) return;
-    const script = document.createElement("script");
-    script.async = true;
-    script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsConfig.publisherId}`;
-    script.crossOrigin = "anonymous";
-    script.dataset.adsense = "true";
-    document.head.appendChild(script);
-  }, []);
-
   useEffect(() => {
     const consent = getConsent();
     if (!analyticsReady(consent)) return;

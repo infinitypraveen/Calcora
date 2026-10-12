@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
-import { adPlacements, adsConfig, publisherIdConfigured, slotReady, type AdPage, type AdPlacementKey } from "@/config/ads";
-import { getConsent } from "@/lib/storage";
+import { adPlacements, adsConfig, adsAllowed, publisherIdConfigured, slotReady, type AdPage, type AdPlacementKey } from "@/config/ads";
 
 export function AdSlot({ placement, page }: { placement: AdPlacementKey; page: AdPage }) {
   const config = adPlacements[placement];
@@ -8,9 +7,8 @@ export function AdSlot({ placement, page }: { placement: AdPlacementKey; page: A
   const pushed = useRef(false);
 
   const allowed = config.active && config.pages.includes(page);
-  const consentOk = !adsConfig.requireConsent || getConsent() === "granted";
-  const live = allowed && slotReady(config) && consentOk;
-  const placeholder = allowed && !live && (adsConfig.previewPlaceholders || adsConfig.enabled);
+  const live = allowed && slotReady(config) && adsAllowed();
+  const placeholder = allowed && !live && adsConfig.previewPlaceholders;
 
   useEffect(() => {
     if (!live || pushed.current || !ref.current) return;

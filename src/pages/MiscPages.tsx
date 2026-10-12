@@ -213,7 +213,14 @@ export function PrivacyPage() {
     <LegalShell title="Privacy policy" path="/privacy" description="What Calcora stores, and what it does not.">
       <p>Calculator inputs, including passwords, salaries, and health measurements, are processed in your browser. They are not sent to {site.legalName} and they are not written to local storage.</p>
       <p>Favourites and recently used tools store only calculator slugs on this device. You can clear them on the favourites page. Theme and consent choices are also stored locally.</p>
-      <p>Optional analytics and advertising stay disabled until a measurement ID or AdSense publisher ID is configured and you allow them in the consent bar. Search analytics, if enabled later, should record result counts and selected calculator names, not the raw query, because a query can contain personal numbers.</p>
+      <p>
+        Optional analytics and advertising are configured to ask only visitors in the European Economic Area, the United
+        Kingdom, and Switzerland. We detect that from your device's time zone, without an IP address lookup or any
+        network request. If you are in one of those regions you will see a consent choice; rejecting it keeps every
+        calculator working and limits ads to non-personalised units. If you are elsewhere, we do not ask, because the
+        rules that require consent do not apply to your visit.
+      </p>
+      <p>Search analytics, if enabled later, should record result counts and selected calculator names, not the raw query, because a query can contain personal numbers.</p>
       <p>If you email us, we receive whatever you put in that email. Do not include passwords or full financial records.</p>
       <p>Visitors in the EEA, UK, and other regions with consent rules should be able to reject non-essential cookies. The banner on this site is a starting point. Have counsel review it for your audience before you enable ads.</p>
       <p>Publisher: {site.ownerName}, {site.email}, {site.address}.</p>
