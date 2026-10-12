@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Calcora">
+  <rect width="64" height="64" rx="14" fill="#102033"/>
+  <rect x="16" y="12" width="32" height="40" rx="6" fill="none" stroke="#2DD4BF" stroke-width="3"/>
+  <rect x="21" y="18" width="22" height="8" rx="2" fill="#E8EEF7"/>
+  <circle cx="25" cy="34" r="2.6" fill="#2DD4BF"/>
+  <circle cx="32" cy="34" r="2.6" fill="#2DD4BF"/>
+  <circle cx="39" cy="34" r="2.6" fill="#2DD4BF"/>
+  <circle cx="25" cy="43" r="2.6" fill="#2DD4BF"/>
+  <circle cx="32" cy="43" r="2.6" fill="#2DD4BF"/>
+  <rect x="36.5" y="40.5" width="5.2" height="5.2" rx="1.4" fill="#E8EEF7"/>
+</svg>

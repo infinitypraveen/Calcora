@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="Placeholder illustration of a weighing scale">
+  <rect width="640" height="480" fill="#F4F7FB"/>
+  <rect x="170" y="150" width="300" height="180" rx="28" fill="#102033"/>
+  <circle cx="320" cy="240" r="54" fill="none" stroke="#2DD4BF" stroke-width="12"/>
+  <path d="M320 240l28-22" stroke="#F7F1E6" stroke-width="8" stroke-linecap="round"/>
+</svg>

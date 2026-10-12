@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="Placeholder illustration of a closed book">
+  <rect width="640" height="480" fill="#F4F7FB"/>
+  <rect x="150" y="90" width="340" height="300" rx="18" fill="#102033"/>
+  <rect x="176" y="116" width="288" height="248" rx="8" fill="#F7F1E6"/>
+  <path d="M196 168h248M196 204h200M196 240h220" stroke="#0F766E" stroke-width="8" stroke-linecap="round"/>
+</svg>

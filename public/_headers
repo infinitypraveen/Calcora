@@ -1,0 +1,15 @@
+/*
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  X-Frame-Options: SAMEORIGIN
+  Cross-Origin-Opener-Policy: same-origin
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self' mailto:; object-src 'none'; frame-ancestors 'self'; upgrade-insecure-requests
+
+# Notes:
+# - The single-file Vite build inlines the bundle, so script-src must allow inline scripts.
+#   If you stop inlining, replace 'unsafe-inline' with hashed or external scripts.
+# - Enable HSTS preload only after confirming every subdomain serves HTTPS.
+# - Enabling AdSense requires adding Google ad domains to script-src, frame-src,
+#   img-src, and connect-src (see README). Do not add a guessed publisher ID.

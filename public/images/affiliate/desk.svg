@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="Placeholder illustration of a notebook">
+  <rect width="640" height="480" fill="#F4F7FB"/>
+  <rect x="190" y="80" width="260" height="320" rx="16" fill="#FFFFFF" stroke="#102033" stroke-width="8"/>
+  <path d="M230 150h180M230 190h140M230 230h160" stroke="#14919B" stroke-width="8" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Replace the domain in src/config/site.ts and in this Sitemap line before launch.
+Sitemap: https://example.com/sitemap.xml

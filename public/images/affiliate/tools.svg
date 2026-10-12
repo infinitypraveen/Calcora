@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="Placeholder illustration of a measuring tape">
+  <rect width="640" height="480" fill="#F4F7FB"/>
+  <rect x="120" y="190" width="400" height="90" rx="45" fill="#102033"/>
+  <rect x="150" y="214" width="250" height="42" rx="8" fill="#F7F1E6"/>
+  <path d="M170 235h20M210 235h20M250 235h20M290 235h20M330 235h20" stroke="#0F766E" stroke-width="6" stroke-linecap="round"/>
+</svg>
