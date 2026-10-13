@@ -36,7 +36,7 @@ export function CalculatorPage() {
   return (
     <>
       <Seo
-        title={calc.title}
+        title={`${calc.title} — Free Online Tool`}
         description={calc.description}
         path={path}
         jsonLd={[
@@ -46,6 +46,15 @@ export function CalculatorPage() {
             { name: calc.title, path },
           ]),
           calculatorJsonLd(calc.title, calc.description, path),
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: calc.faqs.map((faq) => ({
+              "@type": "Question",
+              name: faq.q,
+              acceptedAnswer: { "@type": "Answer", text: faq.a },
+            })),
+          },
         ]}
       />
       <nav aria-label="Breadcrumb" className="text-sm text-[var(--muted)]">

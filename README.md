@@ -85,9 +85,42 @@ Placements are documented in `src/config/ads.ts` (each has a `createAs` field). 
 
 Do not use In-feed ads (our pages have no post/feed lists) or Multiplex ads (no recommendation grid). For Display units, leave size on Responsive — the site constrains the shape via `data-ad-format`, and sidebars are desktop-only so they never squeeze on mobile.
 
-## Analytics
+## Consent and where ads are shown
 
-Set `enabled` and a real `G-` measurement ID in `src/config/analytics.ts`. Events fire only after consent. Do not send calculator inputs or raw search text. The tracker records calculator slug, category, affiliate product id, and search result counts.
+Ads and analytics ask for consent only from visitors in the EEA, UK, and Switzerland. `src/lib/geo.ts` detects this from the browser's IANA time zone — no IP address, no network request, no third-party service. Everyone else is served ads immediately and is never shown a banner.
+
+Why: GDPR and Google's EU User Consent Policy require a choice for those regions. They do not require it for India, the US, or most other countries, and blocking ads there costs revenue with no compliance benefit. Given the India-centric calculator set (GST, EMI, income tax, HRA, PPF, NPS), most traffic is outside the consent regions.
+
+Toggle in `src/config/ads.ts`:
+- `consentRegionsOnly: true` — ask only the EEA/UK/CH. Recommended.
+- `consentRegionsOnly: false` — ask every visitor, which blocks ads for anyone who rejects.
+
+**This is not a certified CMP.** Google's policy for EEA/UK traffic expects a Google-certified consent platform. The fully compliant route is Google Privacy & Messaging (formerly Funding Choices) in your AdSense account: it is free, Google-certified, and can be set to show only in Europe. If you take that route, remove the CookieConsent banner from `Layout.tsx` so visitors are not asked twice. Time-zone detection is also a heuristic — a visitor on a VPN may appear elsewhere.
+
+## Analytics (Google Analytics 4)
+
+Open `src/config/analytics.ts` and paste your Measurement ID into `gaMeasurementId`. That is the only change needed — everything else is wired.
+
+Get the ID from Google Analytics → **Admin → Data streams → Web → your stream**. It looks like `G-ABC123XYZ`. Do not use the `GT-` tag ID or the numeric stream ID.
+
+What is already handled:
+- Loads once, asynchronously, after consent rules pass.
+- Single-page route changes are reported as `page_view`, so all ~200 calculator pages show up in reports (a plain gtag snippet would only ever record the first page).
+- `anonymize_ip` on; Google Signals and ad personalisation off.
+- Calculator inputs and raw search text are never sent. Only coarse events: calculator slug, category, affiliate click, search result count.
+- Google's CSP domains are already allowed in the hosting headers.
+
+While `gaMeasurementId` is empty, nothing loads and no requests are made.
+
+## Ranking and backlinks
+
+Technical SEO is done (titles, descriptions, canonicals, sitemap, structured data, server-rendered static content). Rankings also depend on factors no code can set:
+
+- **Backlinks.** The audit reported 0 domain strength, which is normal for a new site. Links from real sites are the single biggest remaining factor. No code change affects this.
+- **Domain.** `calcoraplus.netlify.app` is a subdomain of netlify.app. A custom domain is generally better for building authority.
+- **Time.** Google needs to crawl and index ~200 pages. Submit the sitemap in Search Console and expect weeks, not days.
+
+Nobody can guarantee a #1 position for "calculator" — that term is dominated by very high authority sites. Realistic wins are specific long-tail pages such as "guntha to square feet", "step up SIP calculator" or "HRA exemption calculator", where the detailed explanations on each page compete well.
 
 ## Tax, GST, and currency
 

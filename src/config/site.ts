@@ -11,9 +11,9 @@ export const site = {
   url: "https://calcoraplus.netlify.app",
   locale: "en",
   themeColor: "#102033",
-  ownerName: "Praveen Infinity",
-  email: "infinitypraveen141@gmail.com",
-  address: "India",
+  ownerName: "[Site owner legal name]",
+  email: "hello@example.com",
+  address: "[Street address, City, Region, Postal code, Country]",
   phone: "",
   foundingYear: "2026",
   /** Paste the Search Console HTML tag content value here, or leave blank. */

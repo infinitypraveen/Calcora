@@ -12,7 +12,7 @@
 export const supportConfig = {
   enabled: true,
   /** Paste your Buy Me a Coffee, Ko-fi, GitHub Sponsors, or payment link. */
-  url: "ko-fi.com/calcoraplus",
+  url: "",
   /** Button text. */
   label: "Buy me a coffee",
   /** Platform name, shown for transparency. */

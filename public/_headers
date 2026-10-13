@@ -2,14 +2,32 @@
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), interest-cohort=()
   X-Frame-Options: SAMEORIGIN
   Cross-Origin-Opener-Policy: same-origin
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com; style-src 'self' 'unsafe-inline' https://tpc.googlesyndication.com https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://adservice.google.com https://ad.doubleclick.net https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.google.com https://www.gstatic.com; frame-src https://tpc.googlesyndication.com https://googleads.g.doubleclick.net; base-uri 'self'; form-action 'self' mailto:; object-src 'none'; frame-ancestors 'self'; upgrade-insecure-requests
+  Cross-Origin-Resource-Policy: same-site
+  X-Permitted-Cross-Domain-Policies: none
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://pagead2.googlesyndication.com https://adservice.google.com https://ad.doubleclick.net https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.google.com https://www.gstatic.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com; frame-src https://tpc.googlesyndication.com https://googleads.g.doubleclick.net; base-uri 'self'; form-action 'self' mailto:; object-src 'none'; frame-ancestors 'self'; upgrade-insecure-requests
 
-# Notes:
-# - The single-file Vite build inlines the bundle, so script-src must allow inline scripts.
-#   If you stop inlining, replace 'unsafe-inline' with hashed or external scripts.
-# - Enable HSTS preload only after confirming every subdomain serves HTTPS.
-# - Enabling AdSense requires adding Google ad domains to script-src, frame-src,
-#   img-src, and connect-src (see README). Do not add a guessed publisher ID.
+# Long cache for fingerprinted assets, no cache for the HTML entry point.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.svg
+  Cache-Control: public, max-age=604800
+
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Notes on 'unsafe-inline' in script-src:
+# This build uses vite-plugin-singlefile, which inlines the JavaScript bundle
+# into index.html. An inline bundle cannot execute without 'unsafe-inline',
+# and static hosting cannot issue a per-request nonce. Removing it would take
+# the whole site offline, so it stays.
+#
+# 'unsafe-eval' is NOT present, and object-src is 'none', which closes the two
+# riskier holes. To drop 'unsafe-inline' entirely, remove viteSingleFile from
+# vite.config.ts so the bundle is emitted as an external /assets/*.js file,
+# then delete 'unsafe-inline' from script-src above.
+#
+# Enable HSTS preload only after every subdomain serves HTTPS.

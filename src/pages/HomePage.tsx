@@ -20,13 +20,18 @@ export function HomePage() {
 
   return (
     <>
-      <Seo title={`${site.name} — Free online calculators with the working shown`} description={site.description} path="/" jsonLd={[websiteJsonLd(), organizationJsonLd()]} />
+      <Seo
+        title={`${site.name} — Free Online Calculator for EMI, BMI & Percentage`}
+        description="Free online calculators for EMI, BMI, percentage, compound interest, GST and SIP. Every calculator shows the formula, assumptions and a worked example."
+        path="/"
+        jsonLd={[websiteJsonLd(), organizationJsonLd()]}
+      />
       <AdSlot placement="homeTop" page="home" />
       <section className="grid items-end gap-8 lg:grid-cols-[1.4fr_0.8fr]">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--teal)]">Free, local, explained</p>
-          <h1 className="mt-2 max-w-xl text-4xl leading-tight sm:text-6xl">Free online calculators with the working shown</h1>
-          <p className="mt-4 max-w-xl text-lg text-[var(--muted)]">Accurate formulas for loans, health, maths, home projects, and everyday numbers. Every tool shows the working. No account needed.</p>
+          <h1 className="mt-2 max-w-xl text-4xl leading-tight sm:text-6xl">Free online calculator tools with the working shown</h1>
+          <p className="mt-4 max-w-xl text-lg text-[var(--muted)]">EMI calculator, BMI calculator, percentage calculator, compound interest and more. Every estimator shows its formula, assumptions, and a worked example. No account needed.</p>
           <div className="mt-6 max-w-xl">
             <SearchBox variant="hero" />
           </div>
@@ -57,7 +62,7 @@ export function HomePage() {
         ))}
       </dl>
       <section className="mt-12" id="popular">
-        <h2 className="text-3xl">Popular calculators</h2>
+        <h2 className="text-3xl">Popular calculator tools</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {featured.map((calc) => (
             <Link key={calc.slug} to={`/calculators/${calc.slug}`} className="rounded-2xl border border-[var(--line)] bg-[var(--card)] p-4 hover:border-[var(--teal)]">
