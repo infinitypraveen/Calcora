@@ -1,10 +1,19 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useReducer, useRef } from "react";
 import { adPlacements, adsConfig, adsAllowed, publisherIdConfigured, slotReady, type AdPage, type AdPlacementKey } from "@/config/ads";
 
 export function AdSlot({ placement, page }: { placement: AdPlacementKey; page: AdPage }) {
   const config = adPlacements[placement];
   const ref = useRef<HTMLModElement>(null);
   const pushed = useRef(false);
+
+  // Re-check eligibility the moment the visitor answers the consent banner,
+  // so ads start (or stop) without waiting for a navigation.
+  const [, bump] = useReducer((n: number) => n + 1, 0);
+  useEffect(() => {
+    const onConsent = () => bump();
+    window.addEventListener("calcora:consent", onConsent);
+    return () => window.removeEventListener("calcora:consent", onConsent);
+  }, []);
 
   const allowed = config.active && config.pages.includes(page);
   const live = allowed && slotReady(config) && adsAllowed();
@@ -39,18 +48,21 @@ export function AdSlot({ placement, page }: { placement: AdPlacementKey; page: A
             : "auto";
 
   return (
-    <aside className={`no-print ${desktop} my-4`} aria-label="Advertisement">
+    <aside className={`ad-frame no-print ${desktop} flex-col my-4`} aria-label="Advertisement">
       {live && publisherIdConfigured() ? (
-        <ins
-          ref={ref}
-          className="adsbygoogle block w-full"
-          style={{ display: "block", minHeight: config.minHeight, textAlign: isInArticle ? "center" : undefined }}
-          data-ad-client={adsConfig.publisherId}
-          data-ad-slot={config.slotId}
-          data-ad-format={formatAttr}
-          data-ad-layout={isInArticle ? "in-article" : undefined}
-          data-full-width-responsive={config.format === "horizontal" ? "true" : undefined}
-        />
+        <>
+          <p className="ad-label">Advertisement</p>
+          <ins
+            ref={ref}
+            className="adsbygoogle block w-full"
+            style={{ display: "block", minHeight: config.minHeight, textAlign: isInArticle ? "center" : undefined }}
+            data-ad-client={adsConfig.publisherId}
+            data-ad-slot={config.slotId}
+            data-ad-format={formatAttr}
+            data-ad-layout={isInArticle ? "in-article" : undefined}
+            data-full-width-responsive={config.format === "horizontal" ? "true" : undefined}
+          />
+        </>
       ) : (
         <div className="ad-slot w-full px-3 py-2" style={{ minHeight: config.minHeight }}>
           <span>
