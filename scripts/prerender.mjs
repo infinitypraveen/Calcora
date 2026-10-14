@@ -101,6 +101,10 @@ function updateHead(html, page) {
     `<link rel="canonical" href="${escapeHtml(url)}" />`,
   );
   html = html.replace(
+    /<link rel="sitemap"[^>]*>/,
+    `<link rel="sitemap" type="application/xml" title="Sitemap" href="${siteUrl}/sitemap.xml" />`,
+  );
+  html = html.replace(
     /<meta property="og:title"[^>]*>/,
     `<meta property="og:title" content="${escapeHtml(title)}" />`,
   );
@@ -312,6 +316,13 @@ async function writeRoute(page, template) {
 
 async function main() {
   let template = await readFile(path.join(dist, "index.html"), "utf8");
+
+  // Vite rewrites root-absolute asset refs ("/favicon.svg") to relative
+  // ("./favicon.svg"). That breaks on nested routes like
+  // /calculators/bmi-calculator/, where "./favicon.svg" would resolve inside
+  // the calculator folder. Normalize back to root-absolute before cloning the
+  // template for all 223 routes.
+  template = template.replaceAll('href="./', 'href="/').replaceAll('src="./', 'src="/');
 
   // The existing build is intentionally single-file. Extract the large bundle
   // and stylesheet after Vite runs so 223 static pages can share and cache them
