@@ -50,7 +50,7 @@ Do not add fake reviews, ratings, or discounts. The card component does not need
 
 ## Donations ("Buy me a coffee")
 
-Edit `src/config/support.ts`. Set `url` to your own Buy Me a Coffee, Ko-fi, GitHub Sponsors, or payment link (it must be `https`). Change `label` and `platform` if you use a different service. Until `url` is set, the site still says Calcora is free, but no donate button appears. The message shows on the homepage, under each calculator, in the footer, and on `/support`.
+Edit `src/config/support.ts`. Set `url` to your own Buy Me a Coffee, Ko-fi, GitHub Sponsors, or payment link (it must be `https`). Change `label` and `platform` if you use a different service. Until `url` is set, the banner and support page show share actions (copy link, email, X, WhatsApp) instead of a donate button, so every support CTA always does something — there are no dead links or self-links. The message shows on the homepage, under each calculator, in the footer, and on `/support`.
 
 ## Configure Google AdSense
 
