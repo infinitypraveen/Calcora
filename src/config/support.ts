@@ -12,11 +12,11 @@
 export const supportConfig = {
   enabled: true,
   /** Paste your Buy Me a Coffee, Ko-fi, GitHub Sponsors, or payment link. */
-  url: "",
+  url: "https://ko-fi.com/calcoraplus",
   /** Button text. */
-  label: "Buy me a coffee",
+  label: "Support on Ko-fi",
   /** Platform name, shown for transparency. */
-  platform: "Buy Me a Coffee",
+  platform: "Ko-fi",
   heading: "Calcora is free, and it stays free",
   message:
     "No sign-up, no paywall, and your inputs never leave your browser. If a calculator saved you time, a small contribution helps cover hosting and keeps new tools coming. It is completely optional.",
