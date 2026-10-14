@@ -1,6 +1,34 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Consent Mode v2 defaults. Must run before the Google tag below.
+         Visitors in the EEA/UK/CH (detected from the browser time zone) start
+         with storage denied, so no cookies are set until they accept the
+         banner. A stored earlier choice is honoured. Others start granted. -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      (function () {
+        var state = { ad_storage: "denied", analytics_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" };
+        try {
+          var tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+          var required = tz === "" || /^(Europe\/(Vienna|Brussels|Sofia|Zagreb|Prague|Copenhagen|Tallinn|Helsinki|Paris|Berlin|Athens|Budapest|Dublin|Rome|Riga|Vilnius|Luxembourg|Malta|Amsterdam|Warsaw|Lisbon|Bucharest|Bratislava|Ljubljana|Madrid|Stockholm|Vaduz|Oslo|London|Guernsey|Jersey|Isle_of_Man|Gibraltar|Zurich|Nicosia|Monaco|Andorra|San_Marino|Vatican)|Atlantic\/(Reykjavik|Azores|Madeira|Canary)|Africa\/Ceuta|Asia\/Nicosia)$/.test(tz);
+          var stored = localStorage.getItem("calcora.consent");
+          if (stored === "granted" || !required) {
+            state = { ad_storage: "granted", analytics_storage: "granted", ad_user_data: "granted", ad_personalization: "granted" };
+          }
+          if (stored === "denied") {
+            state = { ad_storage: "denied", analytics_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" };
+          }
+        } catch (e) { /* keep the denied defaults */ }
+        state.wait_for_update = 500;
+        gtag("consent", "default", state);
+      })();
+    </script>
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-NJJ7ZR937F"></script>
     <script>
@@ -10,9 +38,6 @@
 
       gtag('config', 'G-NJJ7ZR937F');
     </script>
-
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- Resource hints: warm up the ad and analytics connections before they are needed. -->
     <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
@@ -29,6 +54,8 @@
     <title>Calcora — Free Online Calculator for EMI, BMI &amp; Percentage</title>
     <meta name="description" content="Free online calculators for EMI, BMI, percentage, compound interest, GST and SIP. Every calculator shows the formula, assumptions and a worked example." />
     <link rel="canonical" href="https://calcoraplus.netlify.app/" />
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
+    <!-- Search Console: if you use the "HTML tag" verification method, paste the tag Google gives you on the next line, then redeploy. The Google Analytics method needs no code. -->
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
@@ -53,6 +80,32 @@
     <meta name="twitter:title" content="Calcora — Free Online Calculator Tools" />
     <meta name="twitter:description" content="Free EMI calculator, BMI calculator, percentage calculator and compound interest calculator. Formula and worked example shown with every result." />
     <meta name="twitter:image" content="https://calcoraplus.netlify.app/og-image.jpg" />
+
+    <!--
+      Self-referencing canonical fix.
+
+      This SPA serves the same index.html for all ~223 routes, so the canonical
+      and og:url above (which point at the homepage) would otherwise tell Google
+      that every calculator page is a duplicate of the homepage. That would stop
+      the subpages being indexed.
+
+      This runs before Googlebot's renderer processes the page and rewrites both
+      to the URL actually being viewed. React's <Seo> component sets the same
+      value again after hydration, so the two always agree.
+    -->
+    <script>
+      (function () {
+        try {
+          var path = window.location.pathname.replace(/\/{2,}/g, "/");
+          if (path !== "/" ) path = path.replace(/\/+$/, "");
+          var url = window.location.origin + path;
+          var canonical = document.querySelector('link[rel="canonical"]');
+          if (canonical) canonical.setAttribute("href", url);
+          var ogUrl = document.querySelector('meta[property="og:url"]');
+          if (ogUrl) ogUrl.setAttribute("content", url);
+        } catch (e) { /* leave the static homepage values in place */ }
+      })();
+    </script>
 
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Calcora Calculators","alternateName":"Calcora","url":"https://calcoraplus.netlify.app/","description":"Free online calculators for finance, health, maths, home and everyday decisions. Every tool shows the formula, assumptions and a worked example.","inLanguage":"en","potentialAction":{"@type":"SearchAction","target":"https://calcoraplus.netlify.app/search?q={search_term_string}","query-input":"required name=search_term_string"}}</script>
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Calcora Calculators","url":"https://calcoraplus.netlify.app/","logo":"https://calcoraplus.netlify.app/favicon.svg"}</script>
