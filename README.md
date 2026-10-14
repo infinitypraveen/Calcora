@@ -99,18 +99,15 @@ Toggle in `src/config/ads.ts`:
 
 ## Analytics (Google Analytics 4)
 
-Open `src/config/analytics.ts` and paste your Measurement ID into `gaMeasurementId`. That is the only change needed — everything else is wired.
+Installed: Measurement ID **G-NJJ7ZR937F**. The Google tag (gtag.js) is in `index.html` `<head>`, exactly as Google's "Install manually" snippet provides. Because this is a single-page app with one HTML shell, that single copy covers every route — do not add it again anywhere else, and do not inject gtag.js from code, or page views will double-count. `src/config/analytics.ts` mirrors the ID for the app's event layer.
 
-Get the ID from Google Analytics → **Admin → Data streams → Web → your stream**. It looks like `G-ABC123XYZ`. Do not use the `GT-` tag ID or the numeric stream ID.
+What is handled:
+- **Consent Mode v2.** A defaults script runs immediately before the tag. Visitors in the EEA/UK/CH start with `ad_storage`, `analytics_storage`, `ad_user_data` and `ad_personalization` denied (region from the browser time zone, honouring any stored choice), so no cookies are set until they accept the banner. Accepting/Rejecting pushes a live `consent update` via the `calcora:consent` event — no reload needed.
+- **SPA page views.** `AdScript.tsx` reports each client-side route change as `page_view`. The static `gtag('config')` already counts the landing page, so the initial route is skipped to avoid a duplicate.
+- **Events.** Only coarse events are sent: calculator slug, category, affiliate click, search result count (`src/lib/track.ts`). Calculator inputs and raw search text are never sent.
+- **CSP.** `googletagmanager.com` and `*.google-analytics.com` are allowed in the hosting headers.
 
-What is already handled:
-- Loads once, asynchronously, after consent rules pass.
-- Single-page route changes are reported as `page_view`, so all ~200 calculator pages show up in reports (a plain gtag snippet would only ever record the first page).
-- `anonymize_ip` on; Google Signals and ad personalisation off.
-- Calculator inputs and raw search text are never sent. Only coarse events: calculator slug, category, affiliate click, search result count.
-- Google's CSP domains are already allowed in the hosting headers.
-
-While `gaMeasurementId` is empty, nothing loads and no requests are made.
+To change the property later, update the ID in both `index.html` and `src/config/analytics.ts`.
 
 ## Ranking and backlinks
 
@@ -130,11 +127,14 @@ Nobody can guarantee a #1 position for "calculator" — that term is dominated b
 
 ## SEO and hosting
 
-- Titles, descriptions, canonical URLs, Open Graph tags, and JSON-LD are set in the browser by `src/components/seo/Seo.tsx`.
-- `public/robots.txt` points at the sitemap. Replace the domain.
-- `public/sitemap.xml` lists public routes. If you add calculators, regenerate it or extend it. The HTML sitemap at `/sitemap` is generated from the registry and is the easier checklist.
-- Because the app is a client-rendered single file, crawlers that execute JavaScript can see calculator pages. A host rewrite is required so `/calculators/emi-calculator` returns `index.html`. Full static prerender of every route is not wired into this Vite config.
-- Search Console: paste the verification token into `searchConsoleVerification` in `src/config/site.ts`.
+- `scripts/prerender.mjs` generates a physical `index.html` for every public route after Vite builds. Netlify runs it through the build command in `netlify.toml`: `npm run build && node scripts/prerender.mjs`.
+- The generator reads the calculator, category, and article registries through Vite, so route HTML stays in sync with the app. It currently emits 223 route files with unique titles, descriptions, self-referencing canonicals, H1s, explanatory text, internal links, and accurate JSON-LD.
+- The existing single-file Vite bundle is post-processed into shared, hashed `/assets/app-*.js` and `/assets/app-*.css` files. This keeps the complete deployment around 4 MB instead of copying a ~780 KB bundle into every route, and lets Netlify cache the assets.
+- `src/components/seo/Seo.tsx` still updates metadata during client-side navigation. Its values match the build-time HTML.
+- `public/robots.txt` points at `https://calcoraplus.netlify.app/sitemap.xml`.
+- `public/sitemap.xml` lists all public routes. If you add a calculator or guide, add its URL to the XML sitemap; the HTML sitemap and physical route are generated from the registry.
+- Search Console ownership uses `public/googlee49bea6a559ecaf4.html`. Keep that file after verification because Google may check it again.
+- Netlify's Prerender extension may remain enabled for other bots, but Google no longer depends on it: every indexable URL now has route-specific HTML on disk before JavaScript runs.
 
 ## Security notes
 
@@ -142,16 +142,13 @@ Nobody can guarantee a #1 position for "calculator" — that term is dominated b
 - External affiliate URLs must be `http` or `https`.
 - Passwords and other sensitive fields are not copied into the result text and are not stored.
 - Headers in `public/_headers`, `netlify.toml`, and `vercel.json` set `nosniff`, a referrer policy, a permissions policy, and framing limited to the same origin. The preview environment may ignore those files.
-- The CSP allows inline scripts because the single-file build inlines the bundle. Tighten it only if you stop inlining.
+- The build-time generator extracts the application bundle and CSS into shared external assets. A few small inline scripts remain for Consent Mode, analytics setup, theme bootstrapping, and the canonical fallback, so the current CSP still permits inline scripts/styles. `unsafe-eval` is not allowed.
 
 ## Unfinished before a public launch
 
 - Replace the owner name, email, and address in `src/config/site.ts` (the domain is already set).
-- Add real AdSense IDs only after approval, then update CSP.
 - Replace sample affiliate products.
 - Re-check tax and GST notes against current official notifications.
 - Add a dated exchange-rate source if you want live currency conversion.
-- Generate a complete XML sitemap after the domain is final, and submit it in Search Console.
 - Have counsel review the privacy, terms, disclaimer, and consent bar for your visitors.
 - Measure Core Web Vitals on the production host. They are targets, not results recorded here.
-- The single-file build prevents per-route prerendered HTML. If you need that, remove the single-file plugin and add a prerender step.
