@@ -99,6 +99,38 @@ h1, h2, h3, .serif { font-family: var(--serif); letter-spacing: -0.02em; }
   letter-spacing: 0.04em;
 }
 
+/*
+  Ad containers (dark-mode fix).
+  The page declares color-scheme: dark, but ad iframes load a light-scheme
+  document. When the two differ the browser paints the iframe with an opaque
+  white canvas, which shows as a stark white box on a dark page. Declaring
+  light on the ad wrapper makes the schemes match, so an empty or unfilled
+  frame stays transparent instead of white. Only the wrapper is styled; the ad
+  creative itself is never modified.
+*/
+.ad-frame,
+.ad-frame ins.adsbygoogle {
+  color-scheme: light;
+}
+
+.ad-frame ins.adsbygoogle {
+  background: transparent;
+}
+
+/* AdSense marks ad units it could not fill. Collapse them (and the label)
+   rather than leave a blank box. */
+.ad-frame:has(ins.adsbygoogle[data-ad-status="unfilled"]) {
+  display: none;
+}
+
+.ad-label {
+  margin: 0 0 0.25rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
 .dark .ad-slot {
   border-color: #31445f;
   color: #8ea0b8;
